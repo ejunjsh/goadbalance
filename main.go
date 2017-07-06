@@ -28,7 +28,7 @@ func main()  {
 	if err!=nil{
 		return
 	}
-	s:= server.NewServer(l,a...)
+	s:= server.NewServer(l,server.NewRRpicker, a...)
 
 	go func() {
 		for{

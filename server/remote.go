@@ -5,20 +5,20 @@ import (
 	"net"
 )
 
-type remote struct {
+type Remote struct {
 	locker   sync.Mutex
-	address  string
+	Address  string
 	inactive bool
 }
 
-func (r *remote) inactivate()  {
+func (r *Remote) inactivate()  {
 	r.locker.Lock()
 	defer r.locker.Unlock()
 	r.inactive=true
 }
 
-func (r *remote) tryReactivate() error {
-	conn,err:=net.Dial("tcp",r.address)
+func (r *Remote) tryReactivate() error {
+	conn,err:=net.Dial("tcp",r.Address)
 	if err!=nil{
 		return err
 	}
@@ -29,7 +29,7 @@ func (r *remote) tryReactivate() error {
 	return  nil
 }
 
-func (r *remote) isActive() bool{
+func (r *Remote) isActive() bool{
 	r.locker.Lock()
 	defer r.locker.Unlock()
 	return !r.inactive

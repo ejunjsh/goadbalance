@@ -1,12 +1,15 @@
 package server
 
-import "container/ring"
+import (
+	"container/ring"
+)
 
 type rrPicker struct {
 	r *ring.Ring
 }
 
-func NewRRpicker(rs []*remote) *rrPicker{
+
+func NewRRpicker(rs []*Remote) RemotePiker{
 	p:=&rrPicker{ ring.New(len(rs))}
 		for _, s := range rs {
 			p.r.Value = s
@@ -16,9 +19,9 @@ func NewRRpicker(rs []*remote) *rrPicker{
 	return p
 }
 
-func (p *rrPicker) pick() *remote{
+func (p *rrPicker) Pick() *Remote{
 	for i:=0;i<p.r.Len();i++{
-		n := p.r.Value.(*remote)
+		n := p.r.Value.(*Remote)
 		p.r = p.r.Next()
 		if n.isActive(){
 			return n

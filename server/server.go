@@ -5,6 +5,7 @@ import (
 	"time"
 	"sync"
 	"io"
+	"fmt"
 )
 
 type Server struct {
@@ -15,30 +16,31 @@ type Server struct {
 
 	locker sync.Mutex
 
-	remotes []*remote
+	remotes []*Remote
 
-	piker remotePiker
-}
-
-type remotePiker interface {
-	 pick() *remote
+	piker RemotePiker
 }
 
 
 
-func NewServer(l net.Listener,adresses ...string) *Server {
+
+
+func NewServer(l net.Listener,newPicker func([]*Remote) RemotePiker,adresses ...string) *Server {
 	s:=&Server{}
 	s.listener=l
-	rs:=make([]*remote,0)
+	rs:=make([]*Remote,0)
 	for _,adr:=range adresses{
-		r:=remote{}
-		r.address=adr
+		r:= Remote{}
+		r.Address =adr
 		rs=append(rs, &r)
 	}
+	s.remotes=rs
 	s.done=make(chan struct{})
 	if s.HealthChkInterval==0{
 		s.HealthChkInterval=1*time.Minute
 	}
+
+	s.piker=newPicker(s.remotes)
 
 	return s
 }
@@ -62,13 +64,13 @@ func (s *Server) serve(in net.Conn){
 
 	for{
 		s.locker.Lock()
-        r:=s.piker.pick()
+        r:=s.piker.Pick()
 		s.locker.Unlock()
 		if r==nil{
 			break
 		}
 
-		out,err=net.Dial("tcp",r.address)
+		out,err=net.Dial("tcp",r.Address)
 
 		if err==nil{
 			break
@@ -102,7 +104,7 @@ func (s *Server) healthCheck(){
 					if rem.isActive() {
 						continue
 					}
-					go func(r *remote) {
+					go func(r *Remote) {
 						r.tryReactivate()
 					}(rem)
 				}
