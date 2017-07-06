@@ -1,7 +1,7 @@
 # goadbalance
 [![Build Status](https://travis-ci.org/ejunjsh/goadbalance.svg?branch=master)](https://travis-ci.org/ejunjsh/goadbalance)
 
-a simple load balance with go
+a simple load balance with go, supports reconnecting to healthy backends while some backends are down,and reactivating some failed backends while they are up.
 
 ## install
 ````
