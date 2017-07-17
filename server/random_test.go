@@ -6,15 +6,15 @@ import (
 	"strconv"
 )
 
-func TestNewRRpicker(t *testing.T) {
-	fmt.Println("rr start")
+func TestNewRandomPicker(t *testing.T) {
+	fmt.Println("random start")
 	rs:=[]*Remote{}
 	for i:=0;i<5;i++{
 		rs=append(rs,&Remote{Address:strconv.Itoa(i)})
 	}
-	p:=NewRRpicker(rs)
+	p:=NewRandomPicker(rs)
 	for a:=0;a<100;a++{
 		fmt.Println(p.Pick().Address)
 	}
-	fmt.Println("rr end")
+	fmt.Println("random end")
 }
