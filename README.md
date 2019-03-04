@@ -7,6 +7,7 @@ a simple load balance with go, supports below feature:
 
 * use random and round robin to select backend servers
 * try to reactivate the falied backed servers
+* since it runs at tcp level,so it supports all the application level protocol.
 
 ## install
 ````
