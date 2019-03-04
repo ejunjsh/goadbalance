@@ -6,8 +6,7 @@
 a simple load balance with go, supports below feature:
 
 * use random and round robin to select backend servers
-* health check
-* reconnect the failed backend servers.
+* try to reactivate the falied backed servers
 
 ## install
 ````
